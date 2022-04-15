@@ -3,6 +3,7 @@ package com.chuumong.watch.ui.main
 import androidx.lifecycle.viewModelScope
 import com.chuumong.watch.ui.BaseViewModel
 import com.chuumong.watch.ui.ScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -10,7 +11,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import java.text.SimpleDateFormat
 import java.util.*
 
-
+@HiltViewModel
 class MainViewModel : BaseViewModel<MainState, MainSideEffect>() {
 
     override fun createInitialState() = MainState(ScreenState.Loading, null, null)

@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -26,17 +24,18 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
 
-    viewModel.getTime()
+    viewModel.initData()
 
     val stateFlow = viewModel.uiState()
     val state by stateFlow.collectAsState(initial = viewModel.createInitialState())
+    val timeState = remember { mutableStateOf("") }
     when (state.screenState) {
         ScreenState.Loading -> {
             LoadingView(modifier = Modifier.fillMaxSize())
         }
         ScreenState.Success -> {
             state.data?.let {
-                MainWatch(it)
+                timeState.value = it
             }
         }
         else -> {
@@ -45,10 +44,12 @@ fun MainScreen(
             }
         }
     }
+
+    MainWatch(timeState)
 }
 
 @Composable
-fun MainWatch(time: String) {
+fun MainWatch(timeState: State<String>) {
 
     ConstraintLayout(
         modifier = Modifier
@@ -65,7 +66,7 @@ fun MainWatch(time: String) {
                     end.linkTo(parent.end)
                     bottom.linkTo(parent.bottom)
                 },
-            text = time,
+            text = timeState.value,
             textAlign = TextAlign.Center,
             fontSize = 20.sp,
             style = Typography.body2,
@@ -77,5 +78,5 @@ fun MainWatch(time: String) {
 @Preview(showBackground = true)
 @Composable
 private fun MainScreenPreview() {
-    MainWatch("11:11")
+    MainWatch(remember { mutableStateOf("11:11") })
 }

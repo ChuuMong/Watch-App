@@ -15,7 +15,11 @@ class MainViewModel : BaseViewModel<MainState, MainSideEffect>() {
 
     override fun createInitialState() = MainState(ScreenState.Loading, null, null)
 
-    fun getTime() = intent {
+    override fun initData() = intent {
+        getTime()
+    }
+
+    private fun getTime() = intent {
         viewModelScope.launch {
             repeat(Int.MAX_VALUE) {
                 reduce {
@@ -28,7 +32,7 @@ class MainViewModel : BaseViewModel<MainState, MainSideEffect>() {
                     )
                 }
 
-                delay(10)
+                delay(1000)
             }
         }
     }
